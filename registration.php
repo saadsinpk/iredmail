@@ -24,7 +24,7 @@ function insert_data($post_username, $email, $name, $password_post) {
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:red;">Email already used.</div>';
+        echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:green;font-weight: bold;font-size: 24px;">Email already used.</div>';
     } else {
         $sql = "INSERT INTO `users` (`username`, `created`, `mail_host`, `preferences`) VALUES
         ('".$email."', '".date("Y-m-d h:i:s")."', '127.0.0.1', 'a:1:{s:11:\"client_hash\";s:16:\"SefJOeqtq7woIJeZ\";}');";
@@ -44,7 +44,7 @@ function insert_data($post_username, $email, $name, $password_post) {
 
         $sql = "INSERT INTO `forwardings` (`address`, `forwarding`, `domain`, `dest_domain`, `is_maillist`, `is_list`, `is_forwarding`, `is_alias`, `active`) VALUES ('".$email."', '".$email."', 'safemail.website', 'safemail.website', 0, 0, 1, 0, 1);";
         $conn_2->multi_query($sql);
-        echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:green;">Email registered.</div>';
+        echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:green;font-weight: bold;font-size: 24px;">Your account has been created Successfully, Go to <a href="https://mail.safemail.website/">Login</a> Page</div>';
     }
 
     $conn_2->close();
