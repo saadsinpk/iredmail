@@ -1,61 +1,38 @@
-<?php 
-// /home/safemail.website/html
-function insert_data($post_username, $email, $name, $password_post) {
-    $servername = "localhost";
-    $username = "admin";
-    $password = "9OcbE3klG4vd73ue";
-    $dbname = "roundcubemail";
-    $dbname_2 = "vmail";
-    $salt = 'generate_a_salt_somehow';
-    $password_post = "{SSHA512}".base64_encode(hash('sha512', $password_post.$salt, true).$salt);
-
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    $conn_2 = new mysqli($servername, $username, $password, $dbname_2);
-
-    // Check connection
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
-    if ($conn_2->connect_error) {
-      die("Connection failed: " . $conn_2->connect_error);
-    }
-    $sql = "SELECT * FROM users WHERE username = '".$email."'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:green;font-weight: bold;font-size: 24px;">Email already used.</div>';
-    } else {
-        $sql = "INSERT INTO `users` (`username`, `created`, `mail_host`, `preferences`) VALUES
-        ('".$email."', '".date("Y-m-d h:i:s")."', '127.0.0.1', 'a:1:{s:11:\"client_hash\";s:16:\"SefJOeqtq7woIJeZ\";}');";
-
-        $conn->multi_query($sql);
-        $last_id = $conn->insert_id;
-
-        $sql = "INSERT INTO `identities` (`user_id`, `del`, `standard`, `name`, `email`) VALUES ('".$last_id."', 0, 1, '".$name."', '".$email."');";
-        $conn->multi_query($sql);
-
-        $sql = "INSERT INTO `used_quota` (`username`, `bytes`, `messages`, `domain`) VALUES ('".$email."', 0, 0, 'safemail.website');";
-        $conn_2->multi_query($sql);
-
-        $sql = "INSERT INTO `mailbox` (`username`, `password`, `name`, `language`, `mailboxformat`, `mailboxfolder`, `storagebasedirectory`, `storagenode`, `maildir`, `quota`, `domain`, `transport`, `department`, `rank`, `employeeid`, `isadmin`, `isglobaladmin`, `enablesmtp`, `enablesmtpsecured`, `enablepop3`, `enablepop3secured`, `enablepop3tls`, `enableimap`, `enableimapsecured`, `enableimaptls`, `enabledeliver`, `enablelda`, `enablemanagesieve`, `enablemanagesievesecured`, `enablesieve`, `enablesievesecured`, `enablesievetls`, `enableinternal`, `enabledoveadm`, `enablelib-storage`, `enablequota-status`, `enableindexer-worker`, `enablelmtp`, `enabledsync`, `enablesogo`, `enablesogowebmail`, `enablesogocalendar`, `enablesogoactivesync`, `allow_nets`, `disclaimer`, `settings`, `passwordlastchange`, `created`, `modified`, `expired`, `active`) VALUES
-    ('".$email."', '".$password_post."', '".$name."', 'en_US', 'maildir', 'Maildir', '/var/vmail', 'vmail1', 'safemail.website/".$post_username[0]."/".$post_username[1]."/".$post_username[2]."/".$post_username.date("Y-m-d h:i:s")."/', 1024, 'safemail.website', '', '', 'normal', '', 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'y', 'y', 'y', NULL, NULL, NULL, '".date("Y-m-d h:i:s")."', '".date("Y-m-d h:i:s")."', '".date("Y-m-d h:i:s")."', '9999-12-31 00:00:00', 1);";
-        $conn_2->multi_query($sql);
-
-        $sql = "INSERT INTO `forwardings` (`address`, `forwarding`, `domain`, `dest_domain`, `is_maillist`, `is_list`, `is_forwarding`, `is_alias`, `active`) VALUES ('".$email."', '".$email."', 'safemail.website', 'safemail.website', 0, 0, 1, 0, 1);";
-        $conn_2->multi_query($sql);
-        echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:green;font-weight: bold;font-size: 24px;">Your account has been created Successfully, Go to <a href="https://mail.safemail.website/">Login</a> Page</div>';
-    }
-
-    $conn_2->close();
-    $conn->close();
-} ?>
+<!-- /opt/www/roundcubemail-1.4.11/skins/elastic/templates -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>SafeMail Registration</title>
+    <title>Potmailer Registration</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="favicon-32x32.png"/>
+    <style>
+	    button#rcmloginsubmit {
+			padding: .6428571429em 1.4285714286em .7142857143em;
+		    --button-default-background-color: var(--interaction-norm);
+		    --button-hover-background-color: var(--interaction-norm-hover);
+		    --button-active-background-color: var(--interaction-norm-active);
+		    --button-default-text-color: var(--interaction-norm-contrast);
+		    --button-hover-text-color: var(--interaction-norm-contrast);
+		    --button-active-text-color: var(--interaction-norm-contrast);
+		    width: 100%;
+		}
+		input#rcmloginuser, input#rcmloginpwd{
+		    height: 2.75rem;
+		    background-color: var(--field-background-color);
+		    border: 1px solid var(--field-norm);
+		    border-radius: var(--border-radius-medium);
+		    color: var(--field-text-color);
+		    filter: none;
+		    outline: none;
+		    padding: .4285714286em 1.1428571429em;
+		    transition: .15s cubic-bezier(.22,1,.36,1),background-position 0s;
+			width: 100%;
+		}
+		input#rcmloginpwd { 
+			width: 100%;
+	 	}
+	</style>
 </head>
     <body data-new-gr-c-s-check-loaded="14.1031.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1031.0">
         <div class="app-root">
@@ -2005,8 +1982,8 @@ function insert_data($post_username, $email, $name, $password_post) {
             <div class="ui-prominent bg-norm color-norm h100 flex-no-min-children flex-nowrap flex-column h100 sign-layout-bg scroll-if-needed">
                 <header class="flex flex-justify-space-between flex-align-items-center flex-item-noshrink p2">
                     <span>
-                        <a target="_self" class="logo-link flex text-no-decoration text-no-decoration" href="https://mail.safemail.website" style="font-size: 26px;">
-                            Safemail
+                        <a target="_self" class="logo-link flex text-no-decoration text-no-decoration" href="https://mail.potmailer.com" style="font-size: 26px;">
+                            Potmailer
                         </a>
                     </span>
                 </header>
@@ -2014,140 +1991,44 @@ function insert_data($post_username, $email, $name, $password_post) {
                     <div>
                         <main class="ui-standard color-norm bg-norm relative no-scroll w100 max-w100 center sign-layout mw30r">
                             <div class="sign-layout-header">
-                                <h1 class="sign-layout-title text-center mt1 mb0-5"><strong>Create your SafeMail Account</strong></h1>
-                                <div class="mb1 text-center text-sm mt0 color-weak">to continue to SafeMail</div>
-                                <?php
-                                if(isset($_POST['submit_form'])) {
-                                    if(strlen($_POST['password']) >= 8) {
-                                        if($_POST['password'] == $_POST['confirm_password']) {
-                                            insert_data($_POST['username'], $_POST['username']."@safemail.website", $_POST['fullname'], $_POST['password']);
-                                        } else {
-                                            echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:red;">Password and Confirm Password must be same.</div>';
-                                        }
-                                    } else {
-                                        echo '<div class="mb1 text-center text-sm mt0 color-weak" style="color:red;">Password must be minimum 8 characters long</div>';
-                                    }
-                                }
-                                ?>
-
+                                <img src="potmailerlogo1.png">
+                                <h1 class="sign-layout-title text-center mt1 mb0-5"><strong>Login to your Potmailer Account</strong></h1>
                             </div>
                             <div class="sign-layout-main-content">
-                                <form name="accountForm" method="post" autocomplete="off" novalidate="">
-                                    <label class="inputform-container w100 inputform-container--bigger" for="fullname">
-                                        <div class="flex inputform-label flex-justify-space-between flex-nowrap flex-align-items-end"><span class="inputform-label-text">Name</span></div>
-                                        <div class="inputform-field-container relative">
-                                            <div class="inputform-icon-container flex flex-nowrap flex-align-items-center flex-item-fluid relative">
-                                                <div class="flex-item-fluid">
-                                                    <input
-                                                        autocomplete="fullname"
-                                                        autocapitalize="off"
-                                                        autocorrect="off"
-                                                        spellcheck="false"
-                                                        aria-invalid="false"
-                                                        id="fullname"
-                                                        aria-describedby="id-158"
-                                                        class="w100 inputform-field"
-                                                        value="<?php if(isset($_POST['fullname'])) { echo $_POST['fullname']; } ?>"
-                                                        name="fullname"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="inputform-assist flex flex-nowrap" id="id-158"></div>
-                                    </label>
-                                    <label class="inputform-container w100 inputform-container--bigger" for="username">
-                                        <div class="flex inputform-label flex-justify-space-between flex-nowrap flex-align-items-end"><span class="inputform-label-text">Username</span></div>
-                                        <div class="inputform-field-container relative">
-                                            <div class="inputform-icon-container flex flex-nowrap flex-align-items-center flex-item-fluid relative">
-                                                <div class="flex-item-fluid">
-                                                    <input
-                                                        autocomplete="username"
-                                                        autocapitalize="off"
-                                                        autocorrect="off"
-                                                        spellcheck="false"
-                                                        aria-invalid="false"
-                                                        id="username"
-                                                        aria-describedby="id-158"
-                                                        class="w100 inputform-field"
-                                                        value="<?php if(isset($_POST['username'])) { echo $_POST['username']; } ?>"
-                                                        name="username"
-                                                    />
-                                                </div>
-                                                <div class="inputform-suffix right-icon pr0-5 flex">@safemail.website</div>
-                                            </div>
-                                        </div>
-                                        <div class="inputform-assist flex flex-nowrap" id="id-158"></div>
-                                    </label>
-                                    <label class="inputform-container w100 mt0-5 inputform-container--bigger" for="password">
-                                        <div class="flex inputform-label flex-justify-space-between flex-nowrap flex-align-items-end"><span class="inputform-label-text">Password</span></div>
-                                        <div class="inputform-field-container relative">
-                                            <div class="inputform-icon-container relative">
-                                                <input
-                                                    autocomplete="new-password"
-                                                    autocapitalize="off"
-                                                    autocorrect="off"
-                                                    spellcheck="false"
-                                                    aria-invalid="false"
-                                                    id="password"
-                                                    aria-describedby="id-159"
-                                                    type="password"
-                                                    class="w100 inputform-field"
-                                                    value="<?php if(isset($_POST['password'])) { echo $_POST['password']; } ?>"
-                                                    name="password"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="inputform-assist flex flex-nowrap" id="id-159">Password must contain at least 8 characters</div>
-                                    </label>
-                                    <label class="inputform-container w100 mt0-5 inputform-container--bigger" for="repeat-password">
-                                        <div class="flex inputform-label flex-justify-space-between flex-nowrap flex-align-items-end"><span class="inputform-label-text">Repeat password</span></div>
-                                        <div class="inputform-field-container relative">
-                                            <div class="inputform-icon-container relative">
-                                                <input
-                                                    autocomplete="new-password"
-                                                    autocapitalize="off"
-                                                    autocorrect="off"
-                                                    spellcheck="false"
-                                                    aria-invalid="false"
-                                                    id="repeat-password"
-                                                    aria-describedby="id-160"
-                                                    type="password"
-                                                    class="w100 inputform-field"
-                                                    value="<?php if(isset($_POST['confirm_password'])) { echo $_POST['confirm_password']; } ?>"
-                                                    name="confirm_password"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div class="inputform-assist flex flex-nowrap" id="id-160"></div>
-                                    </label>
-                                    <button class="button button-large button-solid-norm w100 mt1-75" aria-busy="false" type="submit" name="submit_form">Submit</button>
-                                    <div class="text-center mt2">Already have an account? <a href="https://mail.safemail.website/">Sign in</a></div>
-                                </form>
+								<roundcube:form id="login-form" name="login-form" method="post" class="propform">
+								<roundcube:object name="loginform" form="login-form" size="40" submit=true />
+										<roundcube:object name="productname" condition="config:display_product_info &gt; 0" />
+										<roundcube:object name="version" condition="config:display_product_info == 2" />
+										<roundcube:if condition="config:support_url" />
+											&nbsp;&bull;&nbsp; <a href="<roundcube:var name='config:support_url' />" target="_blank" class="support-link"><roundcube:label name="support" /></a>
+										<roundcube:endif />
+										<roundcube:container name="loginfooter" id="login-footer" />
+								</form>
                             </div>
                         </main>
                         <div class="flex-item-noshrink text-center p1">
-                            <span class="text-sm">One account for all SafeMail services</span>
+                            <span class="text-sm">One account for all Potmailer services</span>
                             <div class="p0-5">
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMail</title>
+                                    <title>Potmailer</title>
                                     <use xlink:href="#ic-brand-safe-mail"></use>
                                 </svg>
-                                <span class="sr-only">SafeMail</span>
+                                <span class="sr-only">Potmailer</span>
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMailCalendar</title>
+                                    <title>PotmailerCalendar</title>
                                     <use xlink:href="#ic-brand-safe-calendar"></use>
                                 </svg>
-                                <span class="sr-only">SafeMailCalendar</span>
+                                <span class="sr-only">PotmailerCalendar</span>
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMailVPN</title>
+                                    <title>PotmailerVPN</title>
                                     <use xlink:href="#ic-brand-safe-vpn"></use>
                                 </svg>
-                                <span class="sr-only">SafeMailVPN</span>
+                                <span class="sr-only">PotmailerVPN</span>
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMailDrive</title>
+                                    <title>PotmailerDrive</title>
                                     <use xlink:href="#ic-brand-safe-drive"></use>
                                 </svg>
-                                <span class="sr-only">SafeMailDrive</span>
+                                <span class="sr-only">PotmailerDrive</span>
                             </div>
                         </div>
                     </div>
@@ -2155,18 +2036,23 @@ function insert_data($post_username, $email, $name, $password_post) {
                 <footer class="flex-item-noshrink text-center p1">
                     <div class="text-center text-sm m0 pt1 pb0-5 flex-item-noshrink">
                         <span class="auto-mobile">Based in Switzerland, available globally</span><span class="color-weak pl0-75 pr0-75 no-mobile" aria-hidden="true">|</span>
-                        <span class="auto-mobile"><a href="https://safemail.website/terms-and-conditions" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Terms</a></span>
+                        <span class="auto-mobile"><a href="https://potmailer.com/terms-and-conditions" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Terms</a></span>
                         <span class="color-weak pl0-75 pr0-75 no-mobile" aria-hidden="true">|</span>
-                        <span class="auto-mobile"><a href="https://safemail.website/privacy-policy" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Privacy policy</a></span>
+                        <span class="auto-mobile"><a href="https://potmailer.com/privacy-policy" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Privacy policy</a></span>
                         <span class="color-weak pl0-75 pr0-75 no-mobile" aria-hidden="true">|</span><span class="auto-mobile">Version 4.0.6</span>
                     </div>
                 </footer>
             </div>
         </div>
         <div class="app-root-loader hidden"></div>
-        <noscript class="app-noscript">SafeMail requires Javascript. Enable Javascript and reload this page to continue.</noscript>
+        <noscript class="app-noscript">Potmailer requires Javascript. Enable Javascript and reload this page to continue.</noscript>
         <script defer="defer" src="/runtime.786399f1.js" integrity="sha384-Z9xwenghj4dvVm4A44IH38ZxmYQOz17Bf0JRBSj+6lTuUADqy06ryvHsOdZyr1yK" crossorigin="anonymous"></script>
         <script defer="defer" src="/index.89fe0183.js" integrity="sha384-DmNTeSFdRVk9VLjWl8qCuFadaWR3JmS4E4WLipg6bg9ocA2t/Vcl76CgRKpi5q7z" crossorigin="anonymous"></script>
         <script defer="defer" src="/unsupported.ce2b9856.js" integrity="sha384-rnYWY+UDNHcPATUSXBLifDDLupRdgD3lXKhfGmUxe9xm2olIifU/hHTY1bCpFonZ" crossorigin="anonymous"></script>
     </body>
 </html>
+<noscript>
+	<p class="noscriptwarning"><roundcube:label name="noscriptwarning" /></p>
+</noscript>
+
+<roundcube:include file="includes/footer.html" />
