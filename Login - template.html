@@ -3,8 +3,42 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>SafeMail Registration</title>
+    <title>Potmailer Registration</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type="image/png" href="favicon-32x32.png"/>
+    <style>
+	    button#rcmloginsubmit {
+			padding: .6428571429em 1.4285714286em .7142857143em;
+		    --button-default-background-color: var(--interaction-norm);
+		    --button-hover-background-color: var(--interaction-norm-hover);
+		    --button-active-background-color: var(--interaction-norm-active);
+		    --button-default-text-color: var(--interaction-norm-contrast);
+		    --button-hover-text-color: var(--interaction-norm-contrast);
+		    --button-active-text-color: var(--interaction-norm-contrast);
+		    width: 100%;
+		}
+		input#rcmloginuser, input#rcmloginpwd{
+		    height: 2.75rem;
+		    background-color: var(--field-background-color);
+		    border: 1px solid var(--field-norm);
+		    border-radius: var(--border-radius-medium);
+		    color: var(--field-text-color);
+		    filter: none;
+		    outline: none;
+		    padding: .4285714286em 1.1428571429em;
+		    transition: .15s cubic-bezier(.22,1,.36,1),background-position 0s;
+			width: 100%;
+		}
+		tr.form-group.row { 
+			width: 100%;
+	 	}
+	 	form#login-form { 
+	 		font-size: 0;
+	 	}
+	 	form#login-form input, form#login-form button {
+		    font-size: 16px;
+		}
+	</style>
 </head>
     <body data-new-gr-c-s-check-loaded="14.1031.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1031.0">
         <div class="app-root">
@@ -1954,8 +1988,8 @@
             <div class="ui-prominent bg-norm color-norm h100 flex-no-min-children flex-nowrap flex-column h100 sign-layout-bg scroll-if-needed">
                 <header class="flex flex-justify-space-between flex-align-items-center flex-item-noshrink p2">
                     <span>
-                        <a target="_self" class="logo-link flex text-no-decoration text-no-decoration" href="https://mail.safemail.website" style="font-size: 26px;">
-                            Safemail
+                        <a target="_self" class="logo-link flex text-no-decoration text-no-decoration" href="https://mail.potmailer.com" style="font-size: 26px;">
+                            Potmailer
                         </a>
                     </span>
                 </header>
@@ -1963,7 +1997,8 @@
                     <div>
                         <main class="ui-standard color-norm bg-norm relative no-scroll w100 max-w100 center sign-layout mw30r">
                             <div class="sign-layout-header">
-                                <h1 class="sign-layout-title text-center mt1 mb0-5"><strong>Login to your SafeMail Account</strong></h1>
+                                <img src="potmailerlogo1.png">
+                                <h1 class="sign-layout-title text-center mt1 mb0-5"><strong>Login to your Potmailer Account</strong></h1>
                             </div>
                             <div class="sign-layout-main-content">
 								<roundcube:form id="login-form" name="login-form" method="post" class="propform">
@@ -1978,28 +2013,28 @@
                             </div>
                         </main>
                         <div class="flex-item-noshrink text-center p1">
-                            <span class="text-sm">One account for all SafeMail services</span>
+                            <span class="text-sm">One account for all Potmailer services</span>
                             <div class="p0-5">
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMail</title>
+                                    <title>Potmailer</title>
                                     <use xlink:href="#ic-brand-safe-mail"></use>
                                 </svg>
-                                <span class="sr-only">SafeMail</span>
+                                <span class="sr-only">Potmailer</span>
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMailCalendar</title>
+                                    <title>PotmailerCalendar</title>
                                     <use xlink:href="#ic-brand-safe-calendar"></use>
                                 </svg>
-                                <span class="sr-only">SafeMailCalendar</span>
+                                <span class="sr-only">PotmailerCalendar</span>
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMailVPN</title>
+                                    <title>PotmailerVPN</title>
                                     <use xlink:href="#ic-brand-safe-vpn"></use>
                                 </svg>
-                                <span class="sr-only">SafeMailVPN</span>
+                                <span class="sr-only">PotmailerVPN</span>
                                 <svg viewBox="0 0 16 16" class="icon-20p ml0-5 mr0-5" role="img" focusable="false">
-                                    <title>SafeMailDrive</title>
+                                    <title>PotmailerDrive</title>
                                     <use xlink:href="#ic-brand-safe-drive"></use>
                                 </svg>
-                                <span class="sr-only">SafeMailDrive</span>
+                                <span class="sr-only">PotmailerDrive</span>
                             </div>
                         </div>
                     </div>
@@ -2007,16 +2042,16 @@
                 <footer class="flex-item-noshrink text-center p1">
                     <div class="text-center text-sm m0 pt1 pb0-5 flex-item-noshrink">
                         <span class="auto-mobile">Based in Switzerland, available globally</span><span class="color-weak pl0-75 pr0-75 no-mobile" aria-hidden="true">|</span>
-                        <span class="auto-mobile"><a href="https://safemail.website/terms-and-conditions" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Terms</a></span>
+                        <span class="auto-mobile"><a href="https://potmailer.com/terms-and-conditions" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Terms</a></span>
                         <span class="color-weak pl0-75 pr0-75 no-mobile" aria-hidden="true">|</span>
-                        <span class="auto-mobile"><a href="https://safemail.website/privacy-policy" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Privacy policy</a></span>
+                        <span class="auto-mobile"><a href="https://potmailer.com/privacy-policy" target="_blank" rel="noopener noreferrer nofollow" class="signup-footer-link">Privacy policy</a></span>
                         <span class="color-weak pl0-75 pr0-75 no-mobile" aria-hidden="true">|</span><span class="auto-mobile">Version 4.0.6</span>
                     </div>
                 </footer>
             </div>
         </div>
         <div class="app-root-loader hidden"></div>
-        <noscript class="app-noscript">SafeMail requires Javascript. Enable Javascript and reload this page to continue.</noscript>
+        <noscript class="app-noscript">Potmailer requires Javascript. Enable Javascript and reload this page to continue.</noscript>
         <script defer="defer" src="/runtime.786399f1.js" integrity="sha384-Z9xwenghj4dvVm4A44IH38ZxmYQOz17Bf0JRBSj+6lTuUADqy06ryvHsOdZyr1yK" crossorigin="anonymous"></script>
         <script defer="defer" src="/index.89fe0183.js" integrity="sha384-DmNTeSFdRVk9VLjWl8qCuFadaWR3JmS4E4WLipg6bg9ocA2t/Vcl76CgRKpi5q7z" crossorigin="anonymous"></script>
         <script defer="defer" src="/unsupported.ce2b9856.js" integrity="sha384-rnYWY+UDNHcPATUSXBLifDDLupRdgD3lXKhfGmUxe9xm2olIifU/hHTY1bCpFonZ" crossorigin="anonymous"></script>
